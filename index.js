@@ -24,19 +24,16 @@ var isMatch = function(s, p) {
                 j++
                 break
             case '*':
+                pXinIndex = j + 1
+                while (p[pXinIndex] === p[j - 1]) {
+                    pXinIndex++
+                }
                 if (p[j - 1] === c || p[j - 1] === '.') {
-                    if (pXinIndex > j) {
-                        continue
-                    }
-                    pXinIndex = j + 1
-                    while(p[pXinIndex] === p[j-1]) {
-                        pXinIndex++
-                    }
+                    break
                 } else if (p[pXinIndex] === c || p[pXinIndex] === '.') {
                     j = pXinIndex + 1
                 } else {
-                    if (p[j+1] !== '*')
-                        j++
+                    return false
                 }
                 break
             default:
@@ -88,6 +85,8 @@ var isMatch = function(s, p) {
 };
 
 let cases = [               // [['', ''], ],
+    [['aaaaaaaaaaaaab', 'a*a*a*a*a*a*a*a*a*a*a*a*b'], true],
+    [['aaca', 'ab*a*c*a'], true],
     [['mississippi', 'mis*is*p*.'], false],
     [['aab', 'c*a*b'], true],
     [['abbbcd', 'ab*bbbcd'], true],

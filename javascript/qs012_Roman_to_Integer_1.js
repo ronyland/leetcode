@@ -15,27 +15,26 @@ const CODE = {
 var intToRoman = function(num) {
     if (num < 1 || num > 3999)
         return ''
-    let i = 1000, rs = '', k = 4
+    let i = 1000, rs = ''
     while(i > 0) {
-        k--
         let n = (num / i) | 0
         num = num % i
-        i = i /10 | 0
         if (n > 0) {
             if (n > 5) {
                 if (n === 9)
-                    rs += CODE[Math.pow(10, k)] + CODE[Math.pow(10, k + 1)]
+                    rs += CODE[i] + CODE[i * 10]
                 else
-                    rs += CODE[Math.pow(10, k)*5] + new Array(n-5).fill(CODE[Math.pow(10, k)]).join('')
+                    rs += CODE[i*5] + new Array(n-5).fill(CODE[i]).join('')
             } else if (n < 5) {
                 if (n === 4)
-                    rs += CODE[Math.pow(10, k)] + CODE[Math.pow(10, k)*5]
+                    rs += CODE[i] + CODE[i*5]
                 else
-                    rs += new Array(n).fill(CODE[Math.pow(10, k)]).join('')
+                    rs += new Array(n).fill(CODE[i]).join('')
             } else {
-                rs += CODE[Math.pow(10, k)*5]
+                rs += CODE[i*5]
             }
         }
+        i = i /10 | 0
     }
     return rs
 };

@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "cli-color": "^1.4.0"
+    "leetcode_test": "^1.0.2"
   }
 }

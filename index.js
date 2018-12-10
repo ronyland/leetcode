@@ -4,12 +4,27 @@ let color = require('cli-color')
  * @param {string} p
  * @return {boolean}
  */
-var isMatch = function(s, p) {
+var isMatch = function (s, p) {
     if (s.length === 0) {
-        if (p !== '*' && p[1] !== '*' && p.length !== 0)
-            return false
-        else 
+        if ((p === '*' || p[1] === '*' || p.length === 0) && p.length < 3)
             return true
+        else if ((p === '*' || p[1] === '*' || p.length === 0) && p.length > 3) {
+            let nums = []
+            for (let x = 3; x < p.length; x++) {
+                if (p[x] === '*') {
+                    if (p[x - 1] !== '*' && p[x - 1] !== '.') {
+                        nums.pop()
+                    }
+                } else {
+                    nums.push(p[x] === '.' && p[x + 1] === '*' ? '*' : p[x])
+                }
+            }
+            if (nums.length === 0)
+                return true
+            else 
+                return false
+        } else 
+            return false
     }
     let pXinIndex = 0
     for (var i = 0, j = 0; i < s.length; i++) {
@@ -33,7 +48,11 @@ var isMatch = function(s, p) {
                 } else if (p[pXinIndex] === c || p[pXinIndex] === '.') {
                     j = pXinIndex + 1
                 } else {
-                    return false
+                    if (p[pXinIndex] === '*') {
+                        j=pXinIndex+1
+                        i--
+                    } else 
+                        return false
                 }
                 break
             default:
@@ -52,11 +71,11 @@ var isMatch = function(s, p) {
                 nums.pop()
             }
         } else {
-            nums.push(p[x] === '.' && p[x+1] === '*' ? '*' : p[x])
+            nums.push(p[x] === '.' && p[x+1] === '*' ? '#' : p[x])  // # === .*
         }
     }
     if (j < p.length && nums.length > 0) {
-        if(p[j] !== '*')
+         if(p[j] !== '*' && (nums[0] !== '#' || nums[1] !== undefined && nums[1] !== '*'))
             return false
         
         p = p.substring(0, start) + nums.join('')
@@ -64,11 +83,14 @@ var isMatch = function(s, p) {
         let m = p.length - 1
         let n = s.length - 1
         while (m > j) {
-            if ((p[m] === s[n] || p[m] === '.' || p[m] === '*') && n >= 0) {
-                if (p[m] === '*') {
+            if ((p[m] === s[n] || p[m] === '.' || p[m] === '*' || p[m] === '#') && n >= 0) {
+                if (p[m] === '*' || p[m] === '#') {
                     if (p[m - 1] === s[n] || p[m - 1] === s[n - 1]) {
                         if (p[m - 1] === s[n - 1])
                             n--
+                        m--
+                    }
+                    else if (p[m] === '*' || p[m] === '#') {
                         m--
                     } else
                         return false
@@ -85,15 +107,25 @@ var isMatch = function(s, p) {
 };
 
 let cases = [               // [['', ''], ],
+    [['abbabaaaaaaacaa', 'a*.*b.a.*c*b*a*c*'], true],
+    [['aaa', 'a*a'], true],
+    [['a', '..*'], true],
+    [['aaa', 'aaaa'], false],
+    [['', '.b*'], false],
+    [['', '.*b'], false],
+    [['', '.ac*'], false],
+    [['aba', '.*.*'], true],
+    [['', '.'], false],
+    [['', 'c*c*'], true],
+    [['', ''], true],
+    [['', 'c*ab'], false],
+    [['', '.*'], true],
     [['aaaaaaaaaaaaab', 'a*a*a*a*a*a*a*a*a*a*a*a*b'], true],
     [['aaca', 'ab*a*c*a'], true],
     [['mississippi', 'mis*is*p*.'], false],
     [['aab', 'c*a*b'], true],
     [['abbbcd', 'ab*bbbcd'], true],
-    [['aaa', 'aaaa'], false],
-    [['aaa', 'a*a'], true],
     [['aasdfasdfasdfasdfas', 'aasdf.*asdf.*asdf.*asdf.*s'], true],
-    [['', '.*'], true],
     [['a', '.*..a*'], false],
     [['a', 'ab*'], true],
     [['ab', '.*..'], true],

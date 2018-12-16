@@ -1,4 +1,4 @@
-let test = require('./tools').test
+let test = require('leetcode_test').test
 /**
  * @param {number[]} cells
  * @param {number} N

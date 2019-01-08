@@ -20,7 +20,9 @@ var removeNthFromEnd = function (head, n) {
     return head
 };
 
-function Build(arr) {
+function build(arr) {
+    if(arr.length === 0)
+        return null
     let rs = new ListNode(arr[0])
     let head = rs
     for(let i = 1; i < arr.length; i++) {
@@ -31,7 +33,7 @@ function Build(arr) {
     return head
 }
 
-let rs = removeNthFromEnd(new Build([1]), 1)
+let rs = removeNthFromEnd(build([1]), 1)
 let cur = rs
 let str = ''
 while(cur !== null) {
@@ -39,4 +41,4 @@ while(cur !== null) {
     cur = cur.next
 }
 
-console.log(str)
+console.log(`result is: ${str}`)

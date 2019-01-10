@@ -10,11 +10,11 @@ var strStr = function(haystack, needle) {
     let i = 0, j = 0
     while(i <= m - n) {             //注意，退出条件很重要，若到m，则过不了测试（超时）。爆力解可以接受，KMP(见java版)是以空间换时间。
         while(i < m - n && haystack[i] !== needle[0]) i++;
-        while(haystack[i] && haystack[i] === needle[j]){i++;j++}
+        while(haystack[i + j] && haystack[i + j] === needle[j]){j++}
         if (j >= needle.length)
-            return i - j
+            return i
         else {
-            i = i - j + 1
+            i++
             j = 0
         }
     }
